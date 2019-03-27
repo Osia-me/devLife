@@ -1,10 +1,15 @@
-const express   = require('express'),
-      app       = express(),
-      mongoose  = require('mongoose'),
-      users     = require('./routes/api/users'),
+const express     = require('express'),
+      app         = express(),
+      bodyParser  = require('body-parser'),
+      mongoose    = require('mongoose'),
+      users       = require('./routes/api/users'),
       profile     = require('./routes/api/profile'),
-      topics     = require('./routes/api/topics'),
-      port      = process.env.PORT || 3000;
+      topics      = require('./routes/api/topics'),
+      port        = process.env.PORT || 3000;
+
+// parse application
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 //DB Configuration
 const db = require('./config/keys').mongoURI;
