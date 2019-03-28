@@ -2,7 +2,9 @@ const express   = require('express'),
       router    = express.Router(),
       User      = require('../../models/User'),
       gravatar  = require('gravatar'),
-      bcrypt    = require('bcryptjs');
+      bcrypt    = require('bcryptjs'),
+      jwt       = require('jsonwebtoken'),
+      keys      = require('../../config/keys');
 
 // @route GET api/users/test
 // @description To test users route
@@ -15,11 +17,13 @@ router.get('/test', (req, res) => res.json({
 // @description To register User in DataBase and send the information about user back
 // @access Public
 router.post('/registration', (req,res) => {
+  //check if there user by email
   User.findOne({email: req.body.email})
   .then(user => {
     if(user){
       return res.status(400).json({email: 'Email already exists'});
     } else {
+
       const avatar = gravatar.url(req.body.email, {
         s: '200',
         r: 'pg',
@@ -64,8 +68,19 @@ router.post('/login', (req,res) => {
     bcrypt.compare(password, user.password)
     .then(isMatch => {
       if(isMatch) {
-        //generate token
-        res.json({msg: 'Success'})
+        //generate Sing In token
+        const payload = {id: user.id, name: user.name, avatar: user.avatar };
+        //to generate token: payload infor about user and secret information, then expiresIn
+        jwt.sign(
+          payload,
+          keys.secretKey,
+          {expiresIn: 3600},
+          (err, token) => {
+            res.json({
+              sucess: true,
+              token: 'Bearer' + token
+            })
+        });
       } else {
         return res.status(400).json({password: 'Password incorrect'});
       }
