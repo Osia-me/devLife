@@ -1,12 +1,14 @@
 const express   = require('express'),
       router    = express.Router(),
-      User      = require('../../models/User'),
+      User      = require('../../models/User'), //model
       gravatar  = require('gravatar'),
       bcrypt    = require('bcryptjs'),
       jwt       = require('jsonwebtoken'),
       keys      = require('../../config/keys'),
       passport  = require('passport');
 
+//Validation
+const validateRegister = require('../../validation/register');
 // @route GET api/users/test
 // @description To test users route
 // @access Public
@@ -18,6 +20,11 @@ router.get('/test', (req, res) => res.json({
 // @description To register User in DataBase and send the information about user back
 // @access Public
 router.post('/registration', (req,res) => {
+  const {errors, isValid} = validateRegister(req.body);
+  //Check validation
+  if(!isValid) {
+    return res.status(400).json(errors);
+  }
   //check if there user by email
   User.findOne({email: req.body.email})
   .then(user => {
