@@ -94,7 +94,7 @@ router.post('/login', (req,res) => {
           (err, token) => {
             res.json({
               sucess: true,
-              token: 'Bearer' + token
+              token: 'Bearer ' + token
             })
         });
       } else {

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const ProfileSchema = mongoose.Schema({
+const ProfileSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  handle: {
+  username: {
     type: String,
     required: true,
     max: 40
@@ -72,7 +72,7 @@ const ProfileSchema = mongoose.Schema({
         type: String,
         required: true
       },
-      fieldOfStady: {
+      fieldOfStudy: {
         type: String,
         required: true
       },
@@ -115,4 +115,4 @@ const ProfileSchema = mongoose.Schema({
   }
 });
 
-module.exports =  mongoose.model('profile', ProfileSchema);
+module.exports =  mongoose.model('Profile', ProfileSchema);
