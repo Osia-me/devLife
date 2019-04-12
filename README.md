@@ -11,7 +11,7 @@ In order to run the app:
 
 Application uses nodemon and in order to use it in development mood run:
 
-### `nodemon server`
+### `nodemon develop`
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
