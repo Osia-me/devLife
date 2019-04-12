@@ -94,6 +94,28 @@ router.post('/like/:id', passport.authenticate('jwt', {session: false}), (req, r
         topic.save().then(topic => res.json(topic))
       })
       .catch(err => res.json('Post not found'))
+    });
+});
+
+// @route POST api/topics/unlike/:id
+// @description Unlikeike the topic
+// @access Privat
+router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  Profile.findOne({user: req.user.id})
+    .then(profile => {
+      Topic.findById(req.params.id)
+      .then(topic => {
+        if(topic.likes.filter(like => like.user.toString() === req.user.id).length === 0){
+          return res.status(400).json({notLiked: 'You have not yet liked this post'});
+        }
+        //Get removed index
+        const removeIndex = topic.likes.map(item => item.user.toString()).indexOf(req.user.id);
+        //Splice out of array
+        topic.likes.splice(removeIndex, 1);
+        //Save
+        topic.save().then(topic => res.json(topic));
+      })
+      .catch(err => res.json('Post not found'))
     })
 })
 
